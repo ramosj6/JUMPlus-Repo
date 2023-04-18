@@ -132,15 +132,12 @@ public class MovieDaoSql implements MovieDao{
 		}
 		return false;	}
 
+	// will only update the average rating for our case
 	@Override
-	public boolean updateMovie(Movie movie) {
-		try(PreparedStatement pstmt = conn.prepareStatement("update department set title = ?, genre = ?, length = ?, film_studios = ? " 
-				+ "where dept_id = ?");){
-			pstmt.setString(1, movie.getTitle());
-			pstmt.setString(2, movie.getGenre());
-			pstmt.setInt(3, movie.getLengthMin());
-			pstmt.setInt(4, movie.getAvgRating());
-			pstmt.setInt(5, movie.getId());
+	public boolean updateMovie(double avgRating, int movieId) {
+		try(PreparedStatement pstmt = conn.prepareStatement("update movies set average_rating = ? where movie_id = ?");){
+			pstmt.setDouble(1, avgRating);
+			pstmt.setInt(2, movieId);
 			
 			int count = pstmt.executeUpdate();
 			if(count > 0) {
@@ -148,6 +145,7 @@ public class MovieDaoSql implements MovieDao{
 			}
 
 		} catch(SQLException e) {
+			e.printStackTrace();
 			return false;
 		}
 		return false;

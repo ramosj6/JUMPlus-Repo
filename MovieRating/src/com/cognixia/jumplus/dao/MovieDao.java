@@ -20,6 +20,6 @@ public interface MovieDao {
 		
 	public boolean deleteMovie(int id);
 
-	public boolean updateMovie(Movie movie);
+	public boolean updateMovie(double avgRating, int movieId);
 
 }
