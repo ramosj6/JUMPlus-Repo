@@ -33,7 +33,7 @@ public class MovieDaoSql implements MovieDao{
 				String title = rs.getString("title");
 				String genre = rs.getString("genre");
 				int length = rs.getInt("length");
-				int avgRating = rs.getInt("average_rating");
+				double avgRating = rs.getDouble("average_rating");
 
 				
 				Movie movie = new Movie(id, title, genre, length, avgRating);
@@ -68,7 +68,7 @@ public class MovieDaoSql implements MovieDao{
 				String title = rs.getString("title");
 				String genre = rs.getString("genre");
 				int length = rs.getInt("length");
-				int avgRating = rs.getInt("average_rating");
+				double avgRating = rs.getDouble("average_rating");
 				
 				rs.close();
 				
@@ -102,7 +102,7 @@ public class MovieDaoSql implements MovieDao{
 			pstmt.setString(1, movie.getTitle());
 			pstmt.setString(2, movie.getGenre());
 			pstmt.setInt(3, movie.getLengthMin());
-			pstmt.setInt(4, movie.getAvgRating());
+			pstmt.setDouble(4, movie.getAvgRating());
 			
 			int count = pstmt.executeUpdate();
 			if(count > 0) {

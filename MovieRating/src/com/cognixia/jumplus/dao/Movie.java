@@ -11,9 +11,9 @@ public class Movie {
 	
 	private int lengthMin;
 	
-	private int avgRating;
+	private double avgRating;
 
-	public Movie(int id, String title, String genre, int lengthMin, int avgRating) {
+	public Movie(int id, String title, String genre, int lengthMin, double avgRating) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -46,11 +46,11 @@ public class Movie {
 		this.lengthMin = lengthMin;
 	}
 
-	public int getAvgRating() {
+	public double getAvgRating() {
 		return avgRating;
 	}
 
-	public void setAvgRating(int avgRating) {
+	public void setAvgRating(double avgRating) {
 		this.avgRating = avgRating;
 	}
 
