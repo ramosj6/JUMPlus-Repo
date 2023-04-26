@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.cognixia.jumplus.dao.Course;
+import com.cognixia.jumplus.dao.CourseDao;
+import com.cognixia.jumplus.dao.CourseDaoSql;
 import com.cognixia.jumplus.dao.Enrolled;
 import com.cognixia.jumplus.dao.Student;
 import com.cognixia.jumplus.dao.StudentDao;
@@ -34,8 +36,12 @@ public class StudentGradeBook {
 	
 	private static StudentDao studentDao;
 	
+	private static CourseDao courseDao;
+	
 	// keeps track of the enrolled list in case any changes occurs(ex. sorting changes)
 	private static List<Enrolled> enrolledStudents;
+	
+	private static List<Course> courseList;
 		
 	public static void main(String[] args) {
 		int validOption = mainMenu();
@@ -56,15 +62,39 @@ public class StudentGradeBook {
 							while(validCourseOption == -1) {
 								validCourseOption = teacherMenu();
 							}
-							if(validCourseOption != teacherDao.getTeacherCourses(teacherFound.getTeacherId()).size()+1) {
-								int teacherOption = studentMenu(validCourseOption);
-								while(teacherOption == -1) {
-									teacherOption = studentMenu(validCourseOption);
+							
+							int coursesTeaching = courseList.size();
+							if(validCourseOption != coursesTeaching + 2) { // this checks if teacher wants to exit/logout of application
+								if(validCourseOption == coursesTeaching + 1) { // adding course option selected
+									int courseToBeAdded = addCourseMenu();
+									while(courseToBeAdded == -1) {
+										courseToBeAdded = addCourseMenu();
+									}
+									if(teacherDao.addCourse(courseToBeAdded, teacherFound.getTeacherId())) {
+										System.out.println("Congratulations! You have successfully added " +  courseDao.getCourseById(courseToBeAdded).get().getCourseName() + " to your list of courses!");
+									} else {
+										System.out.println("Please choose another student to enroll in your class.\n");
+									}
+								} else {
+									//getting courseId
+									int courseId = courseList.get(validCourseOption-1).getId();
+									System.out.println("\nYou have chosen " + courseDao.getCourseById(courseId).get().getCourseName() + "!");
+									
+									// adding teacher as well so we know what teacher the student is taking for a particular course
+									enrolledStudents = studentDao.getStudentsEnrolled(courseId, teacherFound.getTeacherId());
+									
+									int teacherOption = studentMenu();
+									while(teacherOption == -1) { // This is if user inputs a string
+										teacherOption = studentMenu();
+									}
+									while(teacherOption != 7) { // this is to keep on the student menu
+										teacherOptionAction(teacherOption, validCourseOption);
+										teacherOption = studentMenu();
+									}
 								}
-								if(teacherOption != 7) {
-									teacherOptionAction(teacherOption, validCourseOption);
-								}
+								
 							} else {
+								System.out.println("Logging out...\n");
 								isLogin = false;
 								teacherFound = null; // reset user
 							}
@@ -151,23 +181,8 @@ public class StudentGradeBook {
 		}
 	}
 	
-	// WORKING HERE!!!
-	private static int studentMenu(int courseId) {
-		// adding teacher as well so we know what teacher the student is taking for a particular course
-		enrolledStudents = studentDao.getStudentsEnrolled(courseId, teacherFound.getTeacherId());
-		if(enrolledStudents.isEmpty()) {
-			System.out.println("It looks like you haven't enrolled anyone in this course yet, please add students to this course.");
-		} else {
-			System.out.println("Here are the students currently enrolled in this course:");
-			System.out.println("--------------------------------------------------------");
-			for(Enrolled e: enrolledStudents) {
-				// We know student exists
-				Student student = studentDao.getStudentById(e.getStudentId()).get();
-				System.out.println("   Name: " + student.getFirstName() + " " + student.getLastName()
-						+ ", Major: " + student.getMajor() + ", Grade: " + e.getGrade());
-			}
-		}
-		
+	private static int studentMenu() {	
+		printEnrolledStudents();
 		System.out.println("\nHow would you like to proceed?");
 		System.out.println("+========================================================+\r\n"
 				+ "|  1. DISPLAY AVERAGE GRADE                            |\r\n"
@@ -195,36 +210,7 @@ public class StudentGradeBook {
 			return -1;		
 		}
 	}
-	
-	public static int teacherMenu() {
-		int courseOption = 0;
-		Scanner scan = null;
 		
-		try {
-
-			List<Course> courseList = teacherDao.getTeacherCourses(teacherFound.getTeacherId());
-			System.out.println("Here are the courses your are currently teaching:\n");
-			
-			viewCourses(courseList);
-			
-			System.out.println("Which class would you like to select and view?");
-			scan = new Scanner(System.in);
-			courseOption = scan.nextInt();
-			
-			while(!(courseOption > 0 && courseOption <= courseList.size() + 1 )) { // re-prompting user
-				System.out.println("Please enter a valid course from the list or exit.");
-				courseOption = scan.nextInt();
-			}
-			
-			// return course id instead of number associated with course name
-			return courseList.get(courseOption-1).getId();
-			
-		} catch(InputMismatchException e) {
-			System.out.print("Input must be a number. Please try again.\n");
-			return -1;	
-		}
-	}
-	
 	public static int mainMenu() {
 		int option = 0;
 		boolean valid = true; // valid option default set to true
@@ -233,9 +219,11 @@ public class StudentGradeBook {
 		teacherDao = new TeacherDaoSql();
 		
 		studentDao = new StudentDaoSql();
+		courseDao = new CourseDaoSql();
 		try {
 			teacherDao.setConnection();
 			studentDao.setConnection();
+			courseDao.setConnection();
 			scan = new Scanner(System.in);
 			// main menu in console
 			System.out.println("\nWELCOME TEACHER, TO THE STUDENT GRADEBOOK APP! Please register as a new teacher or login to get started.\n");
@@ -262,6 +250,39 @@ public class StudentGradeBook {
 		}  catch(ClassNotFoundException | IOException | SQLException e) {
 			System.out.println("ERROR: " + e.getMessage());
 			return -1;
+		}
+	}
+	
+	public static int teacherMenu() {
+		int courseOption = 0;
+		Scanner scan = null;
+		
+		try {
+
+			courseList = teacherDao.getTeacherCourses(teacherFound.getTeacherId());
+			
+			if(courseList.isEmpty()) {
+				System.out.println("It looks like you are not currently teaching any courses, please add a course.");
+			} else {
+				System.out.println("Here are the courses your are currently teaching:\n");
+				System.out.println("Which class would you like to select and view?");
+			}
+				
+			viewCourses(courseList);
+			
+			scan = new Scanner(System.in);
+			courseOption = scan.nextInt();
+			
+			while(!(courseOption > 0 && courseOption <= courseList.size() + 2 )) { // re-prompting user
+				System.out.println("Please enter a valid course from the list or exit.");
+				courseOption = scan.nextInt();
+			}
+			
+			return courseOption; // this returns the exit 
+
+		} catch(InputMismatchException e) {
+			System.out.print("Input must be a number. Please try again.\n");
+			return -1;	
 		}
 	}
 	
@@ -310,27 +331,149 @@ public class StudentGradeBook {
 					List<Student> sortedStudents = students.stream()
 							.sorted(compareByName)
 							.collect(Collectors.toList());
-					
-					System.out.println(sortedStudents);
-					
+										
 					enrolledStudents = new ArrayList<>();
 					for(Student s: sortedStudents) {
 						enrolledStudents.add(studentDao.getStudentEnrolledByIds(s.getStudentId(), validCourseOption, teacherFound.getTeacherId()).get());
 					}
+					System.out.println("Success! Your student list has been updated and sorted by alphabetical order!\n");
+
 				} else {
 					enrolledStudents = enrolledStudents.stream()
-	                        .sorted(Comparator.comparingDouble(Enrolled::getGrade))
-	                        .filter(x2 -> x2.getGrade() <= 1)
+	                        .sorted(Comparator.comparingDouble(Enrolled::getGrade).reversed()) // go in descending order
 	                        .collect(Collectors.toList());
-					System.out.println("Your student list has been updated and sorted by grade:");
+					System.out.println("Success! Your student list has been updated and sorted by grade!\n");
 				}
 				break;
-			case 4:
+			case 4: // updating
+				updateStudentGradeMenu(validCourseOption);
 				break;
-			case 5:
+			case 5: // adding
+				int studentToBeAdded = addStudentMenu();
+				while(studentToBeAdded == -1) {
+					studentToBeAdded = addStudentMenu();
+				}
+				
+				System.out.println("\nAdding...\n\n");
+				if(teacherDao.addStudent(studentToBeAdded, validCourseOption, teacherFound.getTeacherId())) {
+					System.out.println("Congratulations! You have successfully enrolled " + studentDao.getStudentById(studentToBeAdded).get().getFirstName() + " to the course!");
+					enrolledStudents = studentDao.getStudentsEnrolled(validCourseOption, teacherFound.getTeacherId());
+				} else {
+					System.out.println("Please choose another student to enroll in your class.\n");
+				}
 				break;
-			case 6:
+			case 6: // deleting
+				int studentToBeDeleted = deleteStudentMenu();
+				while(studentToBeDeleted == -1) {
+					studentToBeDeleted = deleteStudentMenu();
+				}
+				System.out.println("\nDeleting...\n\n");
+				if(teacherDao.deleteStudent(studentToBeDeleted, validCourseOption, teacherFound.getTeacherId())) {
+					System.out.println("Successful! You successfully removed " + studentDao.getStudentById(studentToBeDeleted).get().getFirstName() + " from the course!");
+					enrolledStudents = studentDao.getStudentsEnrolled(validCourseOption, teacherFound.getTeacherId());
+				} else {
+					System.out.println("Could not delete student, please try again.");
+				}
 				break;
+		}
+	}
+	
+	private static int deleteStudentMenu() {
+		System.out.println("Who would you like to remove from your course?");
+		
+		try {
+			Scanner scan = new Scanner(System.in);
+			int select = scan.nextInt();
+			while(!(select > 0 && select <= enrolledStudents.size()) ) {
+				System.out.println("Please enter a valid student from the enrollment list.");
+				select = scan.nextInt();
+			}
+			
+			// after choosing a valid student from the list
+			return enrolledStudents.get(select-1).getStudentId();
+		} catch(InputMismatchException e) {
+			System.out.println("Input must be a number. Please try again.\n");
+		}
+		return -1;
+	}
+	
+	private static int addCourseMenu() {
+		List<Course> allCourses = courseDao.getAllCourses();
+		System.out.println("Here are the list of all the course available:\n"
+				+ "-----------------------------------------------------------------------");
+		
+		for(Course c: allCourses) {
+			System.out.println("   " + c.getId() + ") Course Name: " + c.getCourseName());
+		}
+		
+		try {
+			System.out.println("\nWhich course would you like to start teaching?");
+			Scanner scan = new Scanner(System.in);
+			int courseId = scan.nextInt();
+			
+			while(!(courseId > 0 && courseId <= allCourses.size())) {
+				System.out.println("Please enter a valid course id");
+				courseId = scan.nextInt();
+			}
+			return courseId;
+			
+		} catch(InputMismatchException e) {
+			System.out.println("Input must be a number. Please try again.\n");
+			return -1;
+		}
+	}
+	
+	private static int addStudentMenu() {
+		List<Student> allStudents = studentDao.getAllStudents();
+		System.out.println("Here are the list of all students:\n"
+				+ "-----------------------------------------------------------------------");
+		
+		for(Student s: allStudents) {
+			System.out.println("   " + s.getStudentId() + ") Name: " + s.getFirstName() + " " + s.getLastName()
+					+ ", Major: " + s.getMajor());
+		}
+		
+		try {
+			System.out.println("\nWho would you like to enroll in your course?");
+			Scanner scan = new Scanner(System.in);
+			int studentId = scan.nextInt();
+			
+			while(!(studentId > 0 && studentId <= allStudents.size())) {
+				System.out.println("Please enter a valid student id");
+				studentId = scan.nextInt();
+			}
+			return studentId;
+			
+		} catch(InputMismatchException e) {
+			System.out.println("Input must be a number. Please try again.\n");
+			return -1;
+		}
+	}
+	
+	private static void updateStudentGradeMenu(int courseId) {
+		System.out.println("Who's grade would you like to update?");
+		try {
+			Scanner scan = new Scanner(System.in);
+			int select = scan.nextInt();
+			while(!(select > 0 && select <= enrolledStudents.size()) ) {
+				System.out.println("Please enter a valid student from the enrollment list.");
+				select = scan.nextInt();
+			}
+			
+			// after choosing a valid student from the list
+			int studentId = enrolledStudents.get(select-1).getStudentId();
+			
+			System.out.print("Please upgrade their grade: ");
+			double upgradedGrade = scan.nextDouble();
+			
+			if(teacherDao.updateStudentGrade(upgradedGrade, studentId, courseId, teacherFound.getTeacherId())) {
+				System.out.println("\nUpdating...\n\nsCongratulations! You have successfully updated " + studentDao.getStudentById(studentId).get().getFirstName() + "'s grade!\n");
+				enrolledStudents.get(select-1).setGrade(upgradedGrade); // updating the enrollment list
+			} else {
+				System.out.println("Could not update the grade for you movie. Please try again.");
+			}
+		} catch(InputMismatchException e) {
+			System.out.println("Input must be a number. Please try again.\n");
 		}
 	}
 	
@@ -355,6 +498,23 @@ public class StudentGradeBook {
 		
 	}
 	
+	private static void printEnrolledStudents() {
+		if(enrolledStudents.isEmpty()) {
+			System.out.println("It looks like you haven't enrolled anyone in this course yet, please add students to this course.");
+		} else {
+			System.out.println("Here are the students currently enrolled in this course:");
+			System.out.println("--------------------------------------------------------");
+			int counter = 1;
+			for(Enrolled e: enrolledStudents) {
+				// We know student exists
+				Student student = studentDao.getStudentById(e.getStudentId()).get();
+				System.out.println(counter + ")   Name: " + student.getFirstName() + " " + student.getLastName()
+						+ ", Major: " + student.getMajor() + ", Grade: " + e.getGrade());
+				counter++;
+			}
+		}
+	}
+	
 	private static void viewCourses(List<Course> courseList) {
 		// Source: https://stackoverflow.com/questions/15215326/how-can-i-create-table-using-ascii-in-a-console
 		// once user is logged in, display the movies in database
@@ -368,6 +528,7 @@ public class StudentGradeBook {
 		    System.out.format(leftAlignFormat, counter + ". " + c.getCourseName(), c.getCourseCode(), c.getId());
 			counter++;
 		}
+		System.out.format("| " + counter++ + ". ADD COURSE                                                       |%n");
 		System.out.format("| " + counter + ". EXIT/LOGOUT                                                      |%n");
 		System.out.format("+=====================================================================+%n");
 	}

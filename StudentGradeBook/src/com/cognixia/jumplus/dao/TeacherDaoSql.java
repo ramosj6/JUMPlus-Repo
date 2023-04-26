@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -155,5 +157,86 @@ public class TeacherDaoSql implements TeacherDao {
 		}
 		return gradesList;
 	}
+
+	@Override
+	public boolean updateStudentGrade(double grade, int studentId, int courseId, int teacherId) {
+		try( PreparedStatement pstmt = conn.prepareStatement("update enrolled set grade = ? where student_id = ? and course_id = ? and teacher_id = ?");){
+			pstmt.setDouble(1, grade);
+			pstmt.setInt(2, studentId);
+			pstmt.setInt(3, courseId);
+			pstmt.setInt(4, teacherId);
+			
+			int count = pstmt.executeUpdate();
+			if(count > 0) {
+				return true; // update executed
+			}
+		} catch(SQLException e) {
+			return false;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean addStudent(int studentId, int courseId, int teacherId) {
+		try( PreparedStatement pstmt = conn.prepareStatement("insert into enrolled(student_id, course_id, teacher_id, enrolled_date, grade)"
+				+ " values(?, ?, ?, ?, null)")){
+			pstmt.setInt(1, studentId);
+			pstmt.setInt(2, courseId);
+			pstmt.setInt(3, teacherId); // Set to be "not complete"
+			pstmt.setDate(4, new Date(System.currentTimeMillis())); // Set to be "not complete"
+			
+			
+			int count = pstmt.executeUpdate();
+			if(count > 0) { // insert happened
+				return true;
+			}
+
+		} catch (SQLIntegrityConstraintViolationException e) {
+	        System.out.println("Error: Duplicate entry detected. This student is already enrolled in your course!");
+		    return false; 
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return false;
+	}
+	
+	public boolean addCourse(int courseId, int teacherId) {
+		try( PreparedStatement pstmt = conn.prepareStatement("insert into teacher_course(teacher_id, course_id)"
+				+ " values(?, ?)")){
+			pstmt.setInt(1, teacherId);
+			pstmt.setInt(2, courseId);
+			
+			
+			int count = pstmt.executeUpdate();
+			if(count > 0) { // insert happened
+				return true;
+			}
+
+		} catch (SQLIntegrityConstraintViolationException e) {
+	        System.out.println("Error: Duplicate entry detected. You are already teaching this course!");
+		    return false; 
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return false;	}
+
+	@Override
+	public boolean deleteStudent(int studentId, int courseId, int teacherId) {
+		try( PreparedStatement pstmt = conn.prepareStatement("delete from enrolled where student_id = ? and course_id = ? and teacher_id = ?");){
+			pstmt.setInt(1, studentId);
+			pstmt.setInt(2, courseId);
+			pstmt.setInt(3, teacherId);
+
+			int count = pstmt.executeUpdate();
+			if(count > 0) {
+				// if its not deleted
+				return true;
+			}
+		} catch(SQLException e) {
+			return false;
+		}
+		return false;	}
 
 }

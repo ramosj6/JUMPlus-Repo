@@ -17,6 +17,14 @@ public interface TeacherDao {
 	
 	public List<Double> getGrades(int courseId, int teacherId);
 	
+	public boolean updateStudentGrade(double grade, int studentId, int courseId, int teacherId);
+	
+	public boolean addStudent(int studentId, int courseId, int teacherId);
+	
+	public boolean deleteStudent(int studentId, int courseId, int teacherId);
+	
+	public boolean addCourse(int courseId, int teacherId);
+
 	public void setConnection() throws FileNotFoundException, ClassNotFoundException, IOException, SQLException;
 
 
