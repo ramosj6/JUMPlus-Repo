@@ -91,6 +91,7 @@ public class StudentGradeBook {
 										teacherOptionAction(teacherOption, validCourseOption);
 										teacherOption = studentMenu();
 									}
+									enrolledStudents = null; // reset enrolled students list in case teacher wants to choose different course
 								}
 								
 							} else {
