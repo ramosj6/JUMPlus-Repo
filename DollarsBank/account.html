@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dollars Bank</title>
+  <script type="text/javascript" src="app.js"></script>
+  <link rel="stylesheet" type="text/css" href="account.css">
+
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome, <span id="name"></span>!</h1>
+    <div id="accountActions">
+      <button id="withdrawBtn">Withdraw</button>
+      <div id="withdraw" hidden>
+        <h3 >Withdraw</h3>
+        <form id="withdrawForm">
+            <label for="withdrawAmount">Amount:</label>
+            <input type="number" id="withdrawAmount" required>
+            <button type="submit" id="withdrawSubmit">Withdraw</button>
+        </form>
+      </div>
+      
+      <button id="depositBtn">Deposit</button>
+      <div id="deposit" hidden>
+        <h3>Deposit</h3>
+        <form id="depositForm">
+          <label for="depositAmount">Amount:</label>
+          <input type="number" id="depositAmount" required>
+          <button type="submit" id="depositSubmit">Deposit</button>
+        </form>
+      </div>
+
+      <button id="transferBtn">Transfer</button>
+      <div class="transfer" hidden>
+        <h2>Transfer Funds</h2>
+        <form id="transfer-form">
+          <label for="to-account">To Account:</label>
+          <select id="to-account">
+          </select>
+          <br>
+          <label for="transfer-amount">Amount:</label>
+          <input type="number" id="transfer-amount" required>
+          <!-- <button type="submit" id="transferSubmit">Transfer</button> -->
+        </form>
+      </div>
+
+      <button id="transactionsBtn">View Transactions</button>
+      <div id="transactionList"></div>
+      <button id="customerInfoBtn">View Customer Info</button>
+    </div>
+    <div id="transactionHistory"></div>
+    <div id="customerInfo"></div>
+    <button id="logoutBtn">Logout</button>
+
+    <div id="accountList"></div>
+
+    </div>
+  </div>
+
+</body>
+</html>
