@@ -1,0 +1,50 @@
+.profile {
+    margin: 20px;
+  }
+  
+  .profileTitle {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .userInfo {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .userInfo p {
+    margin-bottom: 10px;
+  }
+  
+  .previousOrders {
+    margin-top: 20px;
+  }
+  
+  .previousOrders table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .previousOrders th,
+  .previousOrders td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+  }
+  
+  .previousOrders th {
+    font-weight: bold;
+  }
+  
+  .previousOrders ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+  
+  .previousOrders li {
+    margin-bottom: 5px;
+  }
+  

@@ -1,0 +1,182 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "first_name": "Jesus",
+      "last_name": "Ramos",
+      "email": "jesramos@gmail.com",
+      "username": "jesus.ramos",
+      "password": "password123",
+      "telephone": "555-123-4567",
+      "previousOrders": [
+        {
+          "order_id": 1,
+          "date": "2023-05-25",
+          "items": [
+            {
+              "id": 2,
+              "name": "Dining Table",
+              "quantity": 1,
+              "price": 299.99
+            },
+            {
+              "id": 5,
+              "name": "Bookshelf",
+              "quantity": 2,
+              "price": 199.99
+            }
+          ],
+          "total": 699.97
+        },
+        {
+          "order_id": 2,
+          "date": "2023-05-28",
+          "items": [
+            {
+              "id": 4,
+              "name": "Coffee Table",
+              "quantity": 1,
+              "price": 149.99
+            }
+          ],
+          "total": 149.99
+        }    
+      ]
+    },
+    {
+      "id": 2,
+      "first_name": "Ricardo",
+      "last_name": "Ramos",
+      "email": "ricramos@gmail.com",
+      "username": "ricardo.ramos",
+      "password": "password123",
+      "telephone": "222-222-2222",
+      "previousOrders": []
+    },
+    {
+      "id": 3,
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "john@gmail.com",
+      "username": "john.doe",
+      "password": "password123",
+      "telephone": "333-333-333",
+      "previousOrders": []
+    },
+    {
+      "id": 4,
+      "first_name": "Hugo",
+      "last_name": "Ramos",
+      "email": "hugo@gmail.com",
+      "username": "hugo",
+      "password": "password",
+      "telephone": "444-444-4444",
+      "previousOrders": [
+        {
+          "order_id": 1,
+          "date": "2023-05-27",
+          "items": [
+            {
+              "id": 3,
+              "name": "Bed",
+              "quantity": 1,
+              "price": 799.99
+            }
+          ],
+          "total": 799.99
+        },
+        {
+          "order_id": 2,
+          "date": "2023-05-29",
+          "items": [
+            {
+              "id": 1,
+              "name": "Sofa",
+              "quantity": 1,
+              "price": 599.99
+            },
+            {
+              "id": 4,
+              "name": "Coffee Table",
+              "quantity": 1,
+              "price": 149.99
+            }
+          ],
+          "total": 749.98
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "first_name": "Allison",
+      "last_name": "Hoffman",
+      "email": "ally@gmail.com",
+      "username": "ally",
+      "password": "allycat",
+      "telephone": "555-555-5555",
+      "previousOrders": []
+    }
+  ],
+  "furniture": [
+    {
+      "id": 1,
+      "name": "Sofa",
+      "category": "Living Room",
+      "price": 599.99,
+      "color": "Grey",
+      "material": "Fabric",
+      "description": "A comfortable sofa for your living room.",
+      "image": "./imgs/sofa.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Dining Table",
+      "category": "Dining Room",
+      "price": 299.99,
+      "color": "Brown",
+      "material": "Wood",
+      "description": "A sturdy dining table for family gatherings.",
+      "image": "./imgs/dining_table.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Bed",
+      "category": "Bedroom",
+      "price": 799.99,
+      "color": "White",
+      "material": "Leather",
+      "description": "A luxurious bed for a good night's sleep.",
+      "image": "./imgs/bed.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Coffee Table",
+      "category": "Living Room",
+      "price": 149.99,
+      "color": "Black",
+      "material": "Glass",
+      "description": "A sleek coffee table for your living room.",
+      "image": "./imgs/coffee_table.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Bookshelf",
+      "category": "Study Room",
+      "price": 199.99,
+      "color": "Walnut",
+      "material": "Wood",
+      "description": "A spacious bookshelf to organize your books.",
+      "image": "./imgs/bookshelf.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Office Chair",
+      "category": "Office",
+      "price": 249.99,
+      "color": "Black",
+      "material": "Mesh",
+      "description": "An ergonomic office chair for comfortable work hours.",
+      "image": "./imgs/office_chair.jpg"
+    }
+  ]
+}

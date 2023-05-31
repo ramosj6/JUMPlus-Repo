@@ -25,7 +25,7 @@ const users = [
         }
         ] },
     { id: 2, name: "John Doe", email: "john@yahoo.com", phoneNumber: "(222)222-2222", username: 'john', password: 'password2', 
-    accounts: [{ id: 1, balance: 1000, 
+    accounts: [{ id: 1, type: "Checkings", balance: 1000, 
         transactions: [{ 
             amount: 100, transactionType: "Withdraw", description: "Withdrew 100 dollars", date: new Date()}] }] }
 ];
