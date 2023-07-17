@@ -43,30 +43,27 @@ public class ConsolePrinterUtility {
     }
 
     public static void printUserExpenses(List<Expense> expenses){
-        if(expenses.isEmpty()){
-            System.out.println("\nWhoops, looks like you have no expenses to delete!");
-        } else {
-            System.out.println();
-            String leftAlignFormat = "| %-4d | %15s | %15s | %10s | %10s |%n";
+        System.out.println();
+        String leftAlignFormat = "| %-4d | %15s | %15s | %10s | %10s |%n";
 
-            System.out.format("+====================================================================+%n");
-            System.out.format("| #    | Category        | Date            | Amount     | Recurring  |%n");
-            System.out.format("+------+-----------------+-----------------+------------+------------+%n");
+        System.out.format("+====================================================================+%n");
+        System.out.format("| #    | Category        | Date            | Amount     | Recurring  |%n");
+        System.out.format("+------+-----------------+-----------------+------------+------------+%n");
 
-            int counter = 1;
-            for(Expense e: expenses){
-                System.out.format(leftAlignFormat, counter, e.getCategory(), e.getExpenseDate(), "$" + e.getAmount(), e.isRecurring());
-                counter++;
-            }
-
-            System.out.format("| " + counter + ")    EXIT                                                        |%n");
-            System.out.format("+====================================================================+%n");
+        int counter = 1;
+        for(Expense e: expenses){
+            System.out.format(leftAlignFormat, counter, e.getCategory(), e.getExpenseDate(), "$" + e.getAmount(), e.isRecurring());
+            counter++;
         }
+
+        System.out.format("| " + counter + ")    EXIT                                                        |%n");
+        System.out.format("+====================================================================+%n");
     }
 
     public static void printFiveUpcomingExpenses(List<Expense> expenses){
         if(expenses.isEmpty()){
-            System.out.println("\nHooray! Looks like you have no future expenses!");
+            System.out.println(ColorsUtility.YELLOW_BOLD + ColorsUtility.ITALICS_START +
+                    "\nHooray! Looks like you have no future expenses!" + ColorsUtility.ITALICS_END + ColorsUtility.RESET);
         } else {
             System.out.println();
             System.out.println(ColorsUtility.GREEN_BOLD + "Here are your 5(or less) upcoming expenses:" + ColorsUtility.RESET);
@@ -83,8 +80,8 @@ public class ConsolePrinterUtility {
             }
 
             System.out.format("+====================================================================+%n");
-            System.out.println(ColorsUtility.GREEN_BOLD + "\nLoading back to User Menu..." + ColorsUtility.RESET);
         }
+        System.out.println(ColorsUtility.GREEN_BOLD + "\nLoading back to User Menu..." + ColorsUtility.RESET);
     }
 
     public static void printUserInformation(User user){

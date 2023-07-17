@@ -280,41 +280,47 @@ public class ExpenseController {
 
     public static void deleteExpense(){
         List<Expense> expenses = expenseDao.getAllExpenses(userFound);
-        printUserExpenses(expenses);
-        System.out.println(ColorsUtility.GREEN_BOLD + "Which expense would you like to delete?" + ColorsUtility.RESET);
-
-        scan = null;
-        boolean validOption;
-        int option = 0;
-
-        do{
-            try {
-                scan = new Scanner(System.in);
-                option = scan.nextInt();
-                if(!(option > 0 && option <= expenses.size() + 1)){
-                    System.out.println(ColorsUtility.RED + "Please enter a valid expense from your expenses list." + ColorsUtility.RESET);
-                    validOption = false;
-                } else {
-                    validOption = true;
-                }
-            } catch(InputMismatchException e){
-                System.out.println(ColorsUtility.RED + "Input must be a number. Please try again." + ColorsUtility.RESET);
-                validOption = false;
-            }
-        } while(!validOption);
-
-
-        // after getting a valid option from the list, we can delete as long as its not the exit option
-        if(option == expenses.size() + 1){
-            System.out.println(ColorsUtility.GREEN_BOLD + "Exiting...\n\n");
+        if(expenses.isEmpty()){
+            System.out.println(ColorsUtility.YELLOW_BOLD + ColorsUtility.ITALICS_START +
+                    "\nWhoops. Looks like you have no expenses to delete!" + ColorsUtility.ITALICS_END + ColorsUtility.RESET);
         } else {
-            int expenseId = expenses.get(option-1).getExpenseId();
-            if(expenseDao.deleteExpense(expenseId, userFound)) {
-                System.out.println(ColorsUtility.GREEN + "\nSuccessfully deleted expense for " + userFound.getUsername() + "!" + ColorsUtility.RESET);
+            printUserExpenses(expenses);
+            System.out.println(ColorsUtility.GREEN_BOLD + "Which expense would you like to delete?" + ColorsUtility.RESET);
+
+            scan = null;
+            boolean validOption;
+            int option = 0;
+
+            do{
+                try {
+                    scan = new Scanner(System.in);
+                    option = scan.nextInt();
+                    if(!(option > 0 && option <= expenses.size() + 1)){
+                        System.out.println(ColorsUtility.RED + "Please enter a valid expense from your expenses list." + ColorsUtility.RESET);
+                        validOption = false;
+                    } else {
+                        validOption = true;
+                    }
+                } catch(InputMismatchException e){
+                    System.out.println(ColorsUtility.RED + "Input must be a number. Please try again." + ColorsUtility.RESET);
+                    validOption = false;
+                }
+            } while(!validOption);
+
+
+            // after getting a valid option from the list, we can delete as long as it's not the exit option
+            if(option == expenses.size() + 1){
+                System.out.println(ColorsUtility.GREEN_BOLD + "Exiting...");
             } else {
-                System.out.println(ColorsUtility.RED + "Could not delete expense. Please try again." + ColorsUtility.RESET);
+                int expenseId = expenses.get(option-1).getExpenseId();
+                if(expenseDao.deleteExpense(expenseId, userFound)) {
+                    System.out.println(ColorsUtility.GREEN + "\nSuccessfully deleted expense for " + userFound.getUsername() + "!" + ColorsUtility.RESET);
+                } else {
+                    System.out.println(ColorsUtility.RED + "Could not delete expense. Please try again." + ColorsUtility.RESET);
+                }
             }
         }
+        System.out.println(ColorsUtility.GREEN_BOLD + "\nLoading back to User Menu..." + ColorsUtility.RESET);
     }
 
     //Source: https://www.baeldung.com/java-email-validation-regex#:~:text=The%20simplest%20regular%20expression%20to,otherwise%2C%20the%20result%20is%20false.
