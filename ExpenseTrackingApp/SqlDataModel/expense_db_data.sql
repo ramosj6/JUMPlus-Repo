@@ -42,8 +42,45 @@ VALUES (1, 'Rent', '2023-07-29', 40, true);
 INSERT INTO expense (user_id, category, initial_date, amount, recurring)
 VALUES (1, 'Miscellaneous', '2023-08-01', 25, false);
 
+
+
+
+INSERT INTO expense (user_id, category, initial_date, amount, recurring)
+VALUES (2, 'Food', '2023-07-10', 50, false);
+
+INSERT INTO expense (user_id, category, initial_date, amount, recurring)
+VALUES (2, 'Transportation', '2023-07-15', 30, false);
+
+INSERT INTO expense (user_id, category, initial_date, amount, recurring)
+VALUES (2, 'Utilities', '2023-07-17', 100, true);
+
+INSERT INTO expense (user_id, category, initial_date, amount, recurring)
+VALUES (2, 'Entertainment', '2023-07-20', 20, false);
+
+INSERT INTO expense (user_id, category, initial_date, amount, recurring)
+VALUES (2, 'Shopping', '2023-07-21', 70, false);
+
+INSERT INTO expense (user_id, category, initial_date, amount, recurring)
+VALUES (2, 'Healthcare', '2023-06-24', 60, false);
+
+INSERT INTO expense (user_id, category, initial_date, amount, recurring)
+VALUES (2, 'Education', '2023-08-26', 150, true);
+
+INSERT INTO expense (user_id, category, initial_date, amount, recurring)
+VALUES (2, 'Travel', '2023-07-27', 200, false);
+
+INSERT INTO expense (user_id, category, initial_date, amount, recurring)
+VALUES (2, 'Rent', '2023-08-29', 40, true);
+
+INSERT INTO expense (user_id, category, initial_date, amount, recurring)
+VALUES (2, 'Miscellaneous', '2023-08-01', 25, false);
+
+select * from expense
+where user_id = 2 and initial_date >= curdate()
+limit 5;
+
 select * from expense 
-where user_id = 1 and initial_date >= CURDATE()
+where user_id = 2 and initial_date >= CURDATE()
 order by initial_date
 limit 5;
 
