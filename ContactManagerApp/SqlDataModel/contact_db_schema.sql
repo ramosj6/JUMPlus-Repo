@@ -28,8 +28,8 @@ CREATE TABLE contacts (
     contact_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE,
-    phone_number VARCHAR(50) UNIQUE,
+    email VARCHAR(100),
+    phone_number VARCHAR(50),
     address VARCHAR(255),
     FOREIGN KEY (user_id)
         REFERENCES user (user_id)
