@@ -65,7 +65,8 @@ public class StudentController {
                                     }
                                 } else {
                                     //getting courseId
-                                    int courseId = courseList.get(validCourseOption-1).getId();
+                                    int courseId = courseList.get(validCourseOption-1).getId(); // start here
+                                    System.out.println(courseId);
                                     System.out.println(ColorsUtility.YELLOW + ColorsUtility.ITALICS_START +
                                             "\nYou have chosen " + courseDao.getCourseById(courseId).get().getCourseName() + "!\n" +
                                             ColorsUtility.ITALICS_END + ColorsUtility.RESET);
@@ -73,6 +74,7 @@ public class StudentController {
                                     // adding teacher as well, so we know what teacher the student is taking for a particular course
                                     enrolledStudents = studentDao.getStudentsEnrolled(courseId, teacherFound.getTeacherId());
 
+                                    // TODO: start from here
                                     int teacherOption = studentMenu();
                                     while(teacherOption == -1) { // This is if user inputs a string
                                         teacherOption = studentMenu();
