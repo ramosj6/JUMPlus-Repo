@@ -10,3 +10,5 @@ GitHub link for group project PEP_2_Revisit (Frontend): [Panther-Frontend](https
 GitHub link for group project PEP_1_Revisit_Retail (Backend): [Retail-Backend](https://github.com/wanderingAviator/PEP1Revisit)
 
 GitHub link for group project PEP_1_Revisit_Retail (Frontend): [Retail-Backend](https://github.com/ramosj6/Retail_PEPI_Frontend)
+
+GitHub link for Group 5's Weather Application project: [Weather-App](https://github.com/ramosj6/WeatherForecastingApp)
