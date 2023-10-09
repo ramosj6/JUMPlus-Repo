@@ -14,3 +14,5 @@ GitHub link for group project PEP_1_Revisit_Retail (Frontend): [Retail-Backend](
 GitHub link for Group 5's Weather Application project: [Weather-App](https://github.com/ramosj6/WeatherForecastingApp)
 
 GitHub link for Group 3's Language-Learning Application project: [LanguageLearning](https://github.com/Vincent-Zag/LanguageLearning)
+
+GitHub link for Group 2's Forum Application project: [ForumApp](https://github.com/Kaylynnlaster/ForumApp)
